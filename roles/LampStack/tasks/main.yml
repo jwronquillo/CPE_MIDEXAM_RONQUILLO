@@ -39,4 +39,4 @@
   service:
     name: mariadb
     state: restarted
-    enable: true
+    enabled: true
