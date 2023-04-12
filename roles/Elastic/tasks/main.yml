@@ -81,3 +81,26 @@
     name: kibana
     enabled: yes
   when: ansible_distribution == "Ubuntu"
+
+- name: install logstash (Ubuntu)
+  apt:
+    name: logstash
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: run daemon-reload for logstash (Ubuntu)
+  systemd: daemon_reload = yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: enable logstash (Ubuntu)
+  systemd:
+    name: logstash
+    enabled: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: ensure logstash running
+  systemd: state=started name=logstash
+  when: ansible_distribution == "Ubuntu"
+
+
