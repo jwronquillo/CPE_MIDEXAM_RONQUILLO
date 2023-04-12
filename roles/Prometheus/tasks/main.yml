@@ -1,0 +1,25 @@
+---
+
+- name: install prometheus (Ubuntu)
+  command: apt install prometheus -y
+  when: ansible_distribution == "Ubuntu"
+
+- name: install prometheus (CentOS)
+  command: snap install prometheus --classic
+  when: ansible_distribution == "CentOS"
+
+- name: install grafana and influxbd (Ubuntu)
+  apt:
+    name:
+      - grafana
+      - influxdb
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: install grafana and influxdb (CentOS)
+  dnf:
+    name:
+      - grafana
+      - influxdb
+    state: latest
+  when: ansible_distribution == "CentOS"

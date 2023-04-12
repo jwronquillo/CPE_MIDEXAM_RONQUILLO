@@ -1,0 +1,42 @@
+---
+
+- name: install apache and php (Ubuntu)
+  apt:
+    name:
+      - apache2
+      - libapache2-mod-php
+    state: latest
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: install httpd nad php (CentOS)
+  dnf:
+    name:
+      - httpd
+      - php
+    state: latest
+  when: ansible_distribution == "CentOS"
+
+- name: start httpd (CentOS)
+  service:
+    name: httpd
+    state: started
+  when: ansible_distribution == "CentOS"
+
+- name: install mariadb (CentOS)
+  yum:
+    name: mariadb-server
+    state: latest
+  when: ansible_distribution == "CentOS"
+
+- name: install mariadb (Ubuntu)
+  apt:
+    name: mariadb-server
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: "Mariadb - Restarting / Enabling"
+  service:
+    name: mariadb
+    state: restarted
+    enable: true
