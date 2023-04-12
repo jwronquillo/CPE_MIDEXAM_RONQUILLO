@@ -90,7 +90,9 @@
   when: ansible_distribution == "Ubuntu"
 
 - name: run daemon-reload for logstash (Ubuntu)
-  systemd: daemon_reload = yes
+  systemd:
+    name: daemon
+    reload: yes
   when: ansible_distribution == "Ubuntu"
 
 - name: enable logstash (Ubuntu)
