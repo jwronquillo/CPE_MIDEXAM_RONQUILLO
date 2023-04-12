@@ -38,9 +38,46 @@
     state: present
   when: ansible_distribution == "Ubuntu"
 
-- name: start elasticsearch
+- name: enable elasticsearch
   service:
     name: elasticsearch
     enabled: yes
     masked: no
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: install kibana (Ubuntu)
+  apt:
+    name: kibana
+    update_cache: yes
+  when: ansible_distribution == "Ubuntu"
+
+- name: allow outside access Kibana (Ubuntu)
+  lineinfile:
+    dest: /etc/kibana/kibana.yml
+    regexp: 'server.host'
+    line: 'server.hosts: 0.0.0.0'
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: def server port (Ubuntu)
+  lineinfile:
+    dest: /etc/kibana/kibana.yml
+    regexp: 'server.port:'
+    line: 'server.port: 5601'
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: def elastic URL
+  lineinfile:
+    dest: /etc/kibana/kibana.yml
+    regexp: 'elasticsearch.url'
+    line: 'elasticsearch.url: "http://localhost:9200:"'
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: enable kibana
+  systemd:
+    name: kibana
+    enabled: yes
   when: ansible_distribution == "Ubuntu"
