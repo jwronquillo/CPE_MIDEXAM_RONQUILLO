@@ -1,19 +1,46 @@
 ---
 
-- name: Elastic stack on Ubuntu
+- name: install pre-req
   apt:
     name:
-      - elasticsearch
-      - kibana
-      - logstash
-    state: latest
+      - openjdk-11-jdk
+  when: ansible_distribution == "Ubuntu"
+
+- name: add elasticsearch apt key
+  apt_key:
+    url: "https://packages.elastic.co/GPG-KEY-elasticsearch"
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: adding elastic repo
+  apt_repository:
+    repo: deb https://artifacts.elastic.co/packages/5.x/apt stable main
+  when: ansible_distribution == "Ubuntu"
+
+- name: install elasticsearch
+  apt:
+    name: elasticsearch
     update_cache: yes
   when: ansible_distribution == "Ubuntu"
 
-- name: Nagios Ubuntu
-  apt:
-    name:
-    - nagios4
-    state: latest
-    update_cache: yes
+- name: allow outside access elasticsearch (Ubuntu)
+  lineinfile:
+    dest: /etc/elasticsearch/elasticsearch.yml
+    regexp: 'network.host:'
+    line: 'network.host: 0.0.0.0'
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: update port in config file
+  lineinfile:
+    dest: /etc/elasticsearch/elasticsearch.yml
+    line: 'http.port:9200'
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: start elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+    masked: no
   when: ansible_distribution == "Ubuntu"

@@ -15,7 +15,7 @@
       apt:
         update_cache: yes
       changed_when: false
-      when: ansible_distribtuion == "Ubuntu"
+      when: ansible_distribution == "Ubuntu"
 
 - hosts: Elastic
   become: true
